@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>binlog监听</title>
+    <meta content="binlog监听" name="keywords">
+    <meta content="binlog监听" name="description">
+    <!--    <meta name="renderer" content="webkit">-->
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="*" http-equiv="Access-Control-Allow-Origin">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="telephone=no" name="format-detection">
+    <link rel="icon" th:href="@{/images/favicon.ico}">
+    <script th:src="@{js/lib/vue/vue.js}"></script>
+    <script th:src="@{js/lib/vue-stomp.js}"></script>
+    <script th:src="@{js/lib/sockjs.min.js}"></script>
+    <script th:src="@{js/lib/webstomp.min.js}"></script>
+    <script th:src="@{js/lib/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{js/lib/http-vue-loader.js}"></script>
+</head>
+
+<body>
+<div id="app">
+    <Web-Socket @onmessage="changeMessage" ref="webSocket"></Web-Socket>
+    后台广播推送：
+    <li v-for="res in responseList"><p style="white-space: pre-wrap;">{{res}}</p></li>
+</div>
+
+<script>
+    // 使用httpVueLoader
+    Vue.use(httpVueLoader);
+    /*<![CDATA[*/
+    var vue = new Vue({
+        el: '#app',
+        components: {
+            'WebSocket': 'url: components/WebSocket.vue'
+        },
+        data() {
+            return {
+                responseList: []
+            }
+        },
+        create() {
+        },
+        methods: {
+            //=============================socket=====================start
+            sendMsg() {
+                this.$refs['webSocket'].sendMsg("发送消息");
+            },
+            changeMessage(data) {
+                let httpResult = JSON.parse(data.body);
+                this.responseList.push(httpResult.rs);
+                console.log(httpResult);
+            },
+        },
+        destroyed() {
+        },
+        beforeMount() {
+        },
+        mounted: function () {
+        },
+        beforeDestroy: function () {
+        },
+        watch: {
+            flagShow: {
+                handler(val) {
+                    if (val) {
+                        setTimeout(() => {
+                            this.flagShow = false
+                        }, 3000)
+                    }
+
+                },
+                immediate: true,
+                deep: true
+            }
+        }
+    })
+
+    /*]]>*/
+</script>
+
+</body>
+</html>
