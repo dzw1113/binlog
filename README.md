@@ -1,5 +1,7 @@
 # Getting Started
 
+###解决通过java订阅binlog，解析数据库的dml/dcl/ddl转换成sql文件进行存储。
+
 maven引用或者直接下代码进行编译
 
 ```
